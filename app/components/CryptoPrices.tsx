@@ -1,9 +1,7 @@
 "use client";
 
-import { ArrowDown, ArrowUp, RefreshCw, Search } from "lucide-react";
 import { Coin, fetchTopCoins } from "../api/api";
-import React, { useEffect, useState } from "react";
-import { Sparklines, SparklinesLine } from "react-sparklines";
+import  { useEffect, useState } from "react";
 
 import CryptoTable from "./CryptoTable";
 import GlobalStats from "./GlobalStats";
@@ -16,6 +14,23 @@ const CryptoDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+const [sortConfig, setSortConfig] = useState<{
+  key: keyof Coin | null;
+  direction: "asc" | "desc";
+}>({
+  key: null,
+  direction: "asc",
+});
+
+const handleSort = (key: keyof Coin) => {
+  setSortConfig((prev) => ({
+    key,
+    direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+  }));
+};
+
+
+
 
   const filteredCoins = coins.filter(
     (coin) =>
@@ -47,6 +62,23 @@ const CryptoDashboard = () => {
     { label: "Top Gainer", value: "BNB +12.3%" },
   ];
 
+  const sortedCoins = [...filteredCoins].sort((a, b) => {
+  if (!sortConfig.key) return 0;
+
+  const key = sortConfig.key;
+  const direction = sortConfig.direction === "asc" ? 1 : -1;
+
+  const valA = a[key] ?? 0;
+  const valB = b[key] ?? 0;
+
+  if (typeof valA === "number" && typeof valB === "number") {
+    return (valA - valB) * direction;
+  }
+
+  return String(valA).localeCompare(String(valB)) * direction;
+});
+
+
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
@@ -71,8 +103,8 @@ const CryptoDashboard = () => {
         setSearchTerm={setSearchTerm}
       />
       <GlobalStats stats={globalStats} />
-      {/* TABLE WRAPPER */}
-      <CryptoTable filteredCoins={filteredCoins} />
+
+      <CryptoTable sortedCoins={sortedCoins} onSort={handleSort} />
     </div>
   );
 };
