@@ -1,7 +1,7 @@
 "use client";
 
 import { Coin, fetchTopCoins } from "../api/api";
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import CryptoTable from "./CryptoTable";
 import GlobalStats from "./GlobalStats";
@@ -14,23 +14,20 @@ const CryptoDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-const [sortConfig, setSortConfig] = useState<{
-  key: keyof Coin | null;
-  direction: "asc" | "desc";
-}>({
-  key: null,
-  direction: "asc",
-});
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof Coin | null;
+    direction: "asc" | "desc";
+  }>({
+    key: null,
+    direction: "asc",
+  });
 
-const handleSort = (key: keyof Coin) => {
-  setSortConfig((prev) => ({
-    key,
-    direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
-  }));
-};
-
-
-
+  const handleSort = (key: keyof Coin) => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+    }));
+  };
 
   const filteredCoins = coins.filter(
     (coin) =>
@@ -63,21 +60,20 @@ const handleSort = (key: keyof Coin) => {
   ];
 
   const sortedCoins = [...filteredCoins].sort((a, b) => {
-  if (!sortConfig.key) return 0;
+    if (!sortConfig.key) return 0;
 
-  const key = sortConfig.key;
-  const direction = sortConfig.direction === "asc" ? 1 : -1;
+    const key = sortConfig.key;
+    const direction = sortConfig.direction === "asc" ? 1 : -1;
 
-  const valA = a[key] ?? 0;
-  const valB = b[key] ?? 0;
+    const valA = a[key] ?? 0;
+    const valB = b[key] ?? 0;
 
-  if (typeof valA === "number" && typeof valB === "number") {
-    return (valA - valB) * direction;
-  }
+    if (typeof valA === "number" && typeof valB === "number") {
+      return (valA - valB) * direction;
+    }
 
-  return String(valA).localeCompare(String(valB)) * direction;
-});
-
+    return String(valA).localeCompare(String(valB)) * direction;
+  });
 
   if (loading)
     return (

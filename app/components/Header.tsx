@@ -11,13 +11,11 @@ interface HeaderProps {
 const Header = ({ searchTerm, setSearchTerm, onRefresh }: HeaderProps) => {
   return (
     <header className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-
       <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
         Crypto Tracker
       </h1>
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-auto">
-
         {/* SEARCH */}
         <div className="relative w-full sm:w-60">
           <Search size={16} className="absolute top-3 left-3 text-gray-400" />
