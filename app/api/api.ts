@@ -7,9 +7,9 @@ export interface Coin {
   image: string;
   current_price: number;
   price_change_percentage_24h: number;
-    market_cap: number;
-    total_volume: number;
-    sparkline_in_7d?: { price: number[] };
+  market_cap: number;
+  total_volume: number;
+  sparkline_in_7d?: { price: number[] };
 }
 
 const api = axios.create({
