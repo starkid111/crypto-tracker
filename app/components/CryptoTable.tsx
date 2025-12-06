@@ -2,13 +2,15 @@ import { ArrowDown, ArrowUp } from "lucide-react";
 import { Sparklines, SparklinesLine } from "react-sparklines";
 
 import { Coin } from "../api/api";
+import SortIcon from "./SortIcon";
 
 interface CryptoTableProps {
   sortedCoins: Coin[];
   onSort: (key: keyof Coin) => void;
+  sortConfig: { key: keyof Coin | null; direction: 'asc' | 'desc' }
 }
 
-const CryptoTable = ({ sortedCoins, onSort }: CryptoTableProps) => {
+const CryptoTable = ({ sortedCoins, onSort , sortConfig }: CryptoTableProps) => {
   return (
     <div className="flex-1 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 overflow-hidden">
       <div className="overflow-x-auto lg:max-h-[calc(100vh-250px)] overflow-y-auto">
@@ -20,34 +22,34 @@ const CryptoTable = ({ sortedCoins, onSort }: CryptoTableProps) => {
                 className="py-3 px-4 cursor-pointer hover:text-white transition"
                 onClick={() => onSort("name")}
               >
-                Coin
+                Coin <SortIcon column= "name"  sortConfig={sortConfig}/>
               </th>
 
               <th
                 className="py-3 px-4 cursor-pointer hover:text-white transition"
                 onClick={() => onSort("current_price")}
               >
-                Price
+                Price <SortIcon column= "current_price"  sortConfig={sortConfig}/>
               </th>
 
               <th
                 className="py-3 px-4 cursor-pointer hover:text-white transition"
                 onClick={() => onSort("price_change_percentage_24h")}
               >
-                24h
+                24h <SortIcon column= "price_change_percentage_24h"  sortConfig={sortConfig}/>
               </th>
               <th
                 className="py-3 px-4 cursor-pointer hover:text-white transition hidden lg:table-cell"
                 onClick={() => onSort("market_cap")}
               >
-                Market Cap
+                Market Cap <SortIcon column= "market_cap"  sortConfig={sortConfig}/>
               </th>
 
               <th
                 className="py-3 px-4 cursor-pointer hover:text-white transition hidden md:table-cell"
                 onClick={() => onSort("total_volume")}
               >
-                Volume
+                Volume <SortIcon column= "total_volume"  sortConfig={sortConfig}/>
               </th>
 
               <th className="py-3 px-4">7d</th>

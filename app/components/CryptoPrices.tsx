@@ -3,6 +3,7 @@
 import { Coin, fetchTopCoins } from "../api/api";
 import { useEffect, useState } from "react";
 
+import { ChevronUp } from "lucide-react";
 import CryptoTable from "./CryptoTable";
 import GlobalStats from "./GlobalStats";
 import Header from "./Header";
@@ -21,6 +22,10 @@ const CryptoDashboard = () => {
     key: null,
     direction: "asc",
   });
+
+
+  const [currentPage , setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const handleSort = (key: keyof Coin) => {
     setSortConfig((prev) => ({
@@ -75,6 +80,13 @@ const CryptoDashboard = () => {
     return String(valA).localeCompare(String(valB)) * direction;
   });
 
+
+ const totalItems = sortedCoins.length 
+ const totalPages = Math.ceil(totalItems / itemsPerPage);
+ const startIndex = (currentPage - 1) * itemsPerPage;
+ const endIndex = startIndex + itemsPerPage;
+ const paginatedCoins = sortedCoins.slice(startIndex, endIndex);
+
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
@@ -100,7 +112,7 @@ const CryptoDashboard = () => {
       />
       <GlobalStats stats={globalStats} />
 
-      <CryptoTable sortedCoins={sortedCoins} onSort={handleSort} />
+      <CryptoTable sortedCoins={paginatedCoins} onSort={handleSort} sortConfig={sortConfig} />
     </div>
   );
 };
