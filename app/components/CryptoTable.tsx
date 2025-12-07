@@ -90,7 +90,7 @@ const CryptoTable = ({ sortedCoins, onSort , sortConfig }: CryptoTableProps) => 
                   <td
                     className={`py-3 px-4 font-semibold flex items-center gap-1 ${color}`}
                   >
-                    {coin.price_change_percentage_24h.toFixed(2)}%
+                    {coin.price_change_percentage_24h?.toFixed(2) ?? "N/A"}%
                     <Icon size={12} />
                   </td>
 
