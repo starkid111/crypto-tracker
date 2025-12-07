@@ -7,6 +7,7 @@ import { ChevronUp } from "lucide-react";
 import CryptoTable from "./CryptoTable";
 import GlobalStats from "./GlobalStats";
 import Header from "./Header";
+import Pagination from "./Pagination";
 
 const REFRESH_INTERVAL_MS = 30000;
 
@@ -25,7 +26,7 @@ const CryptoDashboard = () => {
 
 
   const [currentPage , setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 15;
 
   const handleSort = (key: keyof Coin) => {
     setSortConfig((prev) => ({
@@ -87,6 +88,12 @@ const CryptoDashboard = () => {
  const endIndex = startIndex + itemsPerPage;
  const paginatedCoins = sortedCoins.slice(startIndex, endIndex);
 
+ const goToPage = (page : number) => {
+  if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+ }
+
   if (loading)
     return (
       <div className="flex justify-center items-center h-screen bg-gray-900">
@@ -113,6 +120,10 @@ const CryptoDashboard = () => {
       <GlobalStats stats={globalStats} />
 
       <CryptoTable sortedCoins={paginatedCoins} onSort={handleSort} sortConfig={sortConfig} />
+      <div className=" flex justify-center">
+        <Pagination totalItems={totalItems}   currentPage={currentPage} totalPages={totalPages} goToPage={goToPage} />
+      </div>
+      
     </div>
   );
 };
