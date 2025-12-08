@@ -24,8 +24,7 @@ const CryptoDashboard = () => {
     direction: "asc",
   });
 
-
-  const [currentPage , setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
 
   const handleSort = (key: keyof Coin) => {
@@ -81,18 +80,17 @@ const CryptoDashboard = () => {
     return String(valA).localeCompare(String(valB)) * direction;
   });
 
+  const totalItems = sortedCoins.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const paginatedCoins = sortedCoins.slice(startIndex, endIndex);
 
- const totalItems = sortedCoins.length 
- const totalPages = Math.ceil(totalItems / itemsPerPage);
- const startIndex = (currentPage - 1) * itemsPerPage;
- const endIndex = startIndex + itemsPerPage;
- const paginatedCoins = sortedCoins.slice(startIndex, endIndex);
-
- const goToPage = (page : number) => {
-  if (page < 1 || page > totalPages) return;
+  const goToPage = (page: number) => {
+    if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
- }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   if (loading)
     return (
@@ -119,11 +117,19 @@ const CryptoDashboard = () => {
       />
       <GlobalStats stats={globalStats} />
 
-      <CryptoTable sortedCoins={paginatedCoins} onSort={handleSort} sortConfig={sortConfig} />
+      <CryptoTable
+        sortedCoins={paginatedCoins}
+        onSort={handleSort}
+        sortConfig={sortConfig}
+      />
       <div className=" flex justify-center">
-        <Pagination totalItems={totalItems}   currentPage={currentPage} totalPages={totalPages} goToPage={goToPage} />
+        <Pagination
+          totalItems={totalItems}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          goToPage={goToPage}
+        />
       </div>
-      
     </div>
   );
 };
