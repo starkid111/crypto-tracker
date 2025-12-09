@@ -28,17 +28,29 @@ const api = axios.create({
 });
 
 export const fetchTopCoins = async (): Promise<Coin[]> => {
-  try {
-    const cached: string | null = localStorage.getItem(CACHED_KEY);
+  let cachedData: CachedData | null = null;
 
-    if (cached) {
-      const cachedData: CachedData = JSON.parse(cached);
+  try {
+    const cachedString: string | null = localStorage.getItem(CACHED_KEY);
+    if (cachedString) {
+      cachedData = JSON.parse(cachedString) as CachedData;
       const now = Date.now();
-      if (now - cachedData.timestamp < CACHED_DURATION_MS) {
+
+      if (cachedData && now - cachedData.timestamp < CACHED_DURATION_MS) {
+        console.log("Returning fresh data from cache.");
         return cachedData.data;
       }
     }
+  } catch (parseError) {
+    console.warn(
+      "Failed to parse/read cache, proceeding to API fetch.",
+      parseError
+    );
+    cachedData = null;
+  }
 
+  try {
+    console.log("Cache expired or empty, fetching new data from API.");
     const response = await api.get<Coin[]>("", {
       params: {
         vs_currency: "usd",
@@ -49,13 +61,24 @@ export const fetchTopCoins = async (): Promise<Coin[]> => {
       },
     });
 
-    const cachedObj: CachedData = {
+    const newCachedObj: CachedData = {
       timestamp: Date.now(),
       data: response.data,
     };
-    localStorage.setItem(CACHED_KEY, JSON.stringify(cachedObj));
+    localStorage.setItem(CACHED_KEY, JSON.stringify(newCachedObj));
     return response.data;
-  } catch (err: any) {
-    throw new Error(err?.message || "Failed to fetch crypto prices");
+  } catch (apiError: any) {
+    console.warn("API fetch failed.", apiError);
+
+    if (cachedData) {
+      console.warn("API failed, falling back to expired cache data.");
+
+      return cachedData.data;
+    }
+
+    throw new Error(
+      apiError?.message ||
+        "Failed to fetch crypto prices and no cache available."
+    );
   }
 };
