@@ -33,7 +33,7 @@ export const fetchTopCoins = async (): Promise<Coin[]> => {
   try {
     const cachedString: string | null = localStorage.getItem(CACHED_KEY);
     if (cachedString) {
-      cachedData = JSON.parse(cachedString) as CachedData;
+      cachedData = JSON.parse(cachedString);
       const now = Date.now();
 
       if (cachedData && now - cachedData.timestamp < CACHED_DURATION_MS) {
